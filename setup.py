@@ -58,8 +58,9 @@ setuptools.setup(
             sources=["src/aioquic/_crypto.c"],
         ),
     ],
-    package_dir={"": "src", "aioquic.examples": "examples"},
+    package_dir={"": "src"},
     package_data={"aioquic": ["py.typed", "_buffer.pyi", "_crypto.pyi"]},
+    # ln -srf examples src/aioquic/examples
     packages=["aioquic", "aioquic.asyncio", "aioquic.h0", "aioquic.h3", "aioquic.quic", "aioquic.examples"],
     install_requires=[
         "certifi",
