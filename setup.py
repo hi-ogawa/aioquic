@@ -58,9 +58,9 @@ setuptools.setup(
             sources=["src/aioquic/_crypto.c"],
         ),
     ],
-    package_dir={"": "src"},
+    package_dir={"": "src", "aioquic.examples": "examples"},
     package_data={"aioquic": ["py.typed", "_buffer.pyi", "_crypto.pyi"]},
-    packages=["aioquic", "aioquic.asyncio", "aioquic.h0", "aioquic.h3", "aioquic.quic"],
+    packages=["aioquic", "aioquic.asyncio", "aioquic.h0", "aioquic.h3", "aioquic.quic", "aioquic.examples"],
     install_requires=[
         "certifi",
         "cryptography >= 3.1",

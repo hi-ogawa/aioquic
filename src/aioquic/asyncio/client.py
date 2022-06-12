@@ -60,11 +60,16 @@ async def connect(
     except ValueError:
         server_name = host
 
+    #
+    # cf. https://github.com/aiortc/aioquic/pull/269/files
+    #
+
     # lookup remote address
     infos = await loop.getaddrinfo(host, port, type=socket.SOCK_DGRAM)
     addr = infos[0][4]
     if len(addr) == 2:
-        addr = ("::ffff:" + addr[0], addr[1], 0, 0)
+        local_host = "0.0.0.0"
+        # addr = ("::ffff:" + addr[0], addr[1], 0, 0)
 
     # prepare QUIC connection
     if configuration is None:
@@ -75,20 +80,24 @@ async def connect(
         configuration=configuration, session_ticket_handler=session_ticket_handler
     )
 
-    # explicitly enable IPv4/IPv6 dual stack
-    sock = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
-    completed = False
-    try:
-        sock.setsockopt(socket.IPPROTO_IPV6, socket.IPV6_V6ONLY, 0)
-        sock.bind((local_host, local_port, 0, 0))
-        completed = True
-    finally:
-        if not completed:
-            sock.close()
-    # connect
+    # # explicitly enable IPv4/IPv6 dual stack
+    # sock = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
+    # completed = False
+    # try:
+    #     sock.setsockopt(socket.IPPROTO_IPV6, socket.IPV6_V6ONLY, 0)
+    #     sock.bind((local_host, local_port, 0, 0))
+    #     completed = True
+    # finally:
+    #     if not completed:
+    #         sock.close()
+    # # connect
+    # transport, protocol = await loop.create_datagram_endpoint(
+    #     lambda: create_protocol(connection, stream_handler=stream_handler),
+    #     sock=sock,
+    # )
     transport, protocol = await loop.create_datagram_endpoint(
         lambda: create_protocol(connection, stream_handler=stream_handler),
-        sock=sock,
+        local_addr=(local_host, local_port)
     )
     protocol = cast(QuicConnectionProtocol, protocol)
     try:

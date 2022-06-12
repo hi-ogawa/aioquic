@@ -9,8 +9,8 @@ from collections import deque
 from typing import BinaryIO, Callable, Deque, Dict, List, Optional, Union, cast
 from urllib.parse import urlparse
 
-import wsproto
-import wsproto.events
+# import wsproto
+# import wsproto.events
 
 import aioquic
 from aioquic.asyncio.client import connect
@@ -116,9 +116,9 @@ class WebSocket:
         for ws_event in self.websocket.events():
             self.websocket_event_received(ws_event)
 
-    def websocket_event_received(self, event: wsproto.events.Event) -> None:
-        if isinstance(event, wsproto.events.TextMessage):
-            self.queue.put_nowait(event.data)
+    # def websocket_event_received(self, event: wsproto.events.Event) -> None:
+    #     if isinstance(event, wsproto.events.TextMessage):
+    #         self.queue.put_nowait(event.data)
 
 
 class HttpClient(QuicConnectionProtocol):
